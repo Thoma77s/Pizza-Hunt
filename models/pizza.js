@@ -4,10 +4,14 @@ const dateFormat = require('../utils/dateFormat');
 const PizzaSchema = new Schema(
   {
     pizzaName: {
-      type: String
+      type: String,
+      required: true,
+      trim: true
     },
     createdBy: {
-      type: String
+      type: String,
+      required: true,
+      trim: true
     },
     createdAt: {
       type: Date,
@@ -36,8 +40,8 @@ const PizzaSchema = new Schema(
 );
 
 PizzaSchema.virtual('commentCount').get(function() {
-  return this.comments.length;
-})
+  return this.comments.reduce((total, comment) => total + comment.replies.length + 1, 0);
+});
 
 // create the Pizza model using the PizzaSchema
 const Pizza = model('Pizza', PizzaSchema);
